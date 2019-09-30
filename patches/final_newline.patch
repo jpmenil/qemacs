@@ -1,0 +1,37 @@
+diff -Naur buffer.c buffer.c
+--- buffer.c	2017-05-07 08:08:57.000000000 +0200
++++ buffer.c	2019-05-28 18:54:39.151647146 +0200
+@@ -2717,6 +2717,12 @@
+     if (stat(filename, &st) == 0)
+         st_mode = st.st_mode & 0777;
+ 
++    if (qs->final_newline
++    && !eb_is_blank_line(b, b->total_size - 1, NULL)) {
++        /* add new line at end of file */
++        eb_write(b, b->total_size, "\n", 1);
++    }
++    
+     if (!qs->backup_inhibited
+     &&  strlen(filename) < MAX_FILENAME_SIZE - 1) {
+         /* backup old file if present */
+diff -Naur qe.h qemacs/qe.h
+--- qe.h	2019-05-28 06:30:56.000000000 +0200
++++ qe.h	2019-05-28 18:55:19.350103021 +0200
+@@ -1715,6 +1715,7 @@
+     int emulation_flags;
+     int backspace_is_control_h;
+     int backup_inhibited;  /* prevent qemacs from backing up files */
++    int final_newline;  /* add new line at end of file */
+     int fuzzy_search;    /* use fuzzy search for completion matcher */
+     int c_label_indent;
+     const char *user_option;
+diff -Naur variables.c qemacs/variables.c
+--- variables.c	2019-05-28 06:30:56.000000000 +0200
++++ variables.c	2019-05-28 18:55:44.822738803 +0200
+@@ -49,6 +49,7 @@
+     S_VAR( "default-tab-width", default_tab_width, VAR_NUMBER, VAR_RW_SAVE )
+     S_VAR( "default-fill-column", default_fill_column, VAR_NUMBER, VAR_RW_SAVE )
+     S_VAR( "backup-inhibited", backup_inhibited, VAR_NUMBER, VAR_RW_SAVE )
++    S_VAR( "final-newline", final_newline, VAR_NUMBER, VAR_RW_SAVE )
+     S_VAR( "fuzzy-search", fuzzy_search, VAR_NUMBER, VAR_RW_SAVE )
+     S_VAR( "c-label-indent", c_label_indent, VAR_NUMBER, VAR_RW_SAVE )

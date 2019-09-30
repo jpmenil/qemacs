@@ -1,0 +1,33 @@
+diff -Naur qe.h qe.h
+--- qe.h        2019-09-07 10:35:42.628649168 +0200
++++ /tmp/qe.h   2019-09-07 10:37:22.466678160 +0200
+@@ -1717,6 +1717,7 @@
+     int backup_inhibited;  /* prevent qemacs from backing up files */
+     int fuzzy_search;    /* use fuzzy search for completion matcher */
+     int c_label_indent;
++    int really_exit;    /* do not ask for confirmation */
+     const char *user_option;
+ };
+
+diff -Naur qe.c qe.c
+--- qe.c        2019-09-07 10:35:45.499736284 +0200
++++ /tmp/qe.c   2019-09-07 10:38:16.348312626 +0200
+@@ -7477,7 +7477,7 @@
+     qe_ungrab_keys();
+
+     /* now asks for confirmation or exit directly */
+-    if (is->modified) {
++    if ((is->modified) && (!qs->really_exit)) {
+         minibuffer_edit(qs->active_window,
+                         NULL, "Modified buffers exist; exit anyway? (yes or no) ",
+                         NULL, NULL, quit_confirm_cb, NULL);
+diff -Naur variables.c /tmp/variables.c
+--- variables.c 2019-09-07 10:35:32.172331897 +0200
++++ /tmp/variables.c    2019-09-07 10:36:47.929630408 +0200
+@@ -51,6 +51,7 @@
+     S_VAR( "backup-inhibited", backup_inhibited, VAR_NUMBER, VAR_RW_SAVE )
+     S_VAR( "fuzzy-search", fuzzy_search, VAR_NUMBER, VAR_RW_SAVE )
+     S_VAR( "c-label-indent", c_label_indent, VAR_NUMBER, VAR_RW_SAVE )
++    S_VAR( "really-exit", really_exit, VAR_NUMBER, VAR_RW_SAVE )
+
+     //B_VAR( "screen-charset", charset, VAR_NUMBER, VAR_RW )

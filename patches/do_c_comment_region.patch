@@ -1,0 +1,48 @@
+diff -Naur clang.c clang.c
+--- clang.c     2019-09-07 10:11:39.997860047 +0200
++++ /tmp/clang.c        2019-09-07 10:11:34.718700051 +0200
+@@ -1083,6 +1083,36 @@
+     }
+ }
+
++static void do_c_comment_region(EditState *s)
++{
++    int col_num, line1, line2;
++
++    /* deactivate region hilite */
++    s->region_style = 0;
++
++    /* Swap point and mark so mark <= point */
++    if (s->offset < s->b->mark) {
++        int tmp = s->b->mark;
++        s->b->mark = s->offset;
++        s->offset = tmp;
++    }
++    /* We do it with lines to avoid offset variations during indenting */
++    eb_get_pos(s->b, &line1, &col_num, s->b->mark);
++    eb_get_pos(s->b, &line2, &col_num, s->offset);
++
++    if (col_num == 0)
++        line2--;
++
++    /* Iterate over all lines inside block */
++    for (; line1 <= line2; line1++) {
++        s->offset = eb_goto_pos(s->b, line1, 0);
++        //eb_insert_uchars(s->b, s->offset, '/*');
++        eb_insert_str(s->b, s->offset, "/* ");
++        s->offset = eb_goto_pos(s->b, line1, s->b->total_size);
++        eb_insert_str(s->b, s->offset, " */");
++    }
++}
++
+ /* forward / backward preprocessor */
+ static void do_c_forward_conditional(EditState *s, int dir)
+ {
+@@ -1218,6 +1248,8 @@
+           "c-electric-key", do_c_electric, ESi, "*ki")
+     CMD2( KEY_RET, KEY_NONE,
+           "c-newline", do_c_return, ES, "*v")
++    CMD2( KEY_CTRL('c'), KEY_CTRL('c'),
++         "c-comment-region", do_c_comment_region, ES, "*")
+     CMD_DEF_END,
+ };

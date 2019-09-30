@@ -1,0 +1,12 @@
+diff -Naur extra-modes.c extra-modes.c
+--- extra-modes.c       2019-09-07 10:13:59.670092174 +0200
++++ /tmp/extra-modes.c  2019-09-07 10:14:49.729608560 +0200
+@@ -2786,7 +2786,7 @@
+ static ModeDef python_mode = {
+     .name = "Python",
+     .extensions = "py|pyt",
+-    .shell_handlers = "python|python2.6|python2.7",
++    .shell_handlers = "python2|python2.7|python3|python3.6|python",
+     .keywords = python_keywords,
+     .colorize_func = python_colorize_line,
+ };
