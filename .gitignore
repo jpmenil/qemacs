@@ -1,0 +1,8 @@
+.objs/
+STATS
+config.h
+config.mak
+qe
+qe_g
+tqe
+tqe_g
