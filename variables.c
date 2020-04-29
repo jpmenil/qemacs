@@ -66,6 +66,10 @@ static VarDef var_table[] = {
           "Set to prevent automatic backups of modified files" )
     S_VAR( "c-label-indent", c_label_indent, VAR_NUMBER, VAR_RW_SAVE,
           "Number of columns to adjust indentation of C labels." )
+    S_VAR( "really-exit", really_exit, VAR_NUMBER, VAR_RW_SAVE,
+          "Do not ask for confirmation when exiting" )
+    S_VAR( "final-newline", final_newline, VAR_NUMBER, VAR_RW_SAVE,
+          "Add new line at end of file" )
 
     //B_VAR( "screen-charset", charset, VAR_NUMBER, VAR_RW, NULL )
 

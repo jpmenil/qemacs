@@ -7634,7 +7634,7 @@ static void quit_examine_buffers(QuitState *is)
     qe_ungrab_keys();
 
     /* now asks for confirmation or exit directly */
-    if (is->modified) {
+    if ((is->modified) && (!qs->really_exit)) {
         minibuffer_edit(qs->active_window,
                         NULL, "Modified buffers exist; exit anyway? (yes or no) ",
                         NULL, NULL, quit_confirm_cb, NULL);

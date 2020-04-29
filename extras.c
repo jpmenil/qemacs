@@ -489,6 +489,61 @@ static void do_indent_region(EditState *s)
     }
 }
 
+static void do_comment_region(EditState *s)
+{
+    int col_num, line1, line2, offset;
+
+    /* deactivate region hilite */
+    s->region_style = 0;
+
+    /* Swap point and mark so mark <= point */
+    if (s->offset < s->b->mark) {
+        int tmp = s->b->mark;
+        s->b->mark = s->offset;
+        s->offset = tmp;
+    }
+    /* We do it with lines to avoid offset variations during indenting */
+    eb_get_pos(s->b, &line1, &col_num, s->b->mark);
+    eb_get_pos(s->b, &line2, &col_num, s->offset);
+
+    if (col_num == 0)
+        line2--;
+
+    /* Iterate over all lines inside block */
+    for (; line1 <= line2; line1++) {
+        s->offset = eb_goto_pos(s->b, line1, 0);
+        eb_insert_uchar(s->b, s->offset, '#');
+    }
+}
+
+static void do_uncomment_region(EditState *s)
+{
+    int col_num, line1, line2, offset;
+
+    /* deactivate region hilite */
+    s->region_style = 0;
+
+    /* Swap point and mark so mark <= point */
+    if (s->offset < s->b->mark) {
+        int tmp = s->b->mark;
+        s->b->mark = s->offset;
+        s->offset = tmp;
+    }
+    /* We do it with lines to avoid offset variations during indenting */
+    eb_get_pos(s->b, &line1, &col_num, s->b->mark);
+    eb_get_pos(s->b, &line2, &col_num, s->offset);
+
+    if (col_num == 0)
+        line2--;
+
+    /* Iterate over all lines inside block */
+    for (; line1 <= line2; line1++) {
+        s->offset = eb_goto_pos(s->b, line1, 0);
+        if (eb_read_one_byte(s->b, s->offset) == '#')
+            eb_delete_uchar(s->b, s->offset);
+    }
+}
+
 void do_show_date_and_time(EditState *s, int argval)
 {
     time_t t = argval;
@@ -1888,6 +1943,10 @@ static CmdDef extra_commands[] = {
           "untabify-buffer", do_untabify_buffer, ES, "*")
     CMD2( KEY_META(KEY_CTRL('\\')), KEY_NONE,
           "indent-region", do_indent_region, ES, "*")
+    CMD2( KEY_META('['), KEY_NONE,
+         "comment-region", do_comment_region, ES, "*")
+    CMD2( KEY_META(']'), KEY_NONE,
+	 "uncomment-region", do_uncomment_region, ES, "*")
 
     CMD2( KEY_CTRLX('t'), KEY_NONE,
           "show-date-and-time", do_show_date_and_time, ESi, "ui")

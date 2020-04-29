@@ -2844,7 +2844,7 @@ static void python_colorize_line(QEColorizeContext *cp,
 static ModeDef python_mode = {
     .name = "Python",
     .extensions = "py|pyt",
-    .shell_handlers = "python|python2.6|python2.7",
+    .shell_handlers = "python2|python2.7|python3|python3.6|python",
     .keywords = python_keywords,
     .colorize_func = python_colorize_line,
     .colorize_flags = PYTHON_PYTHON,

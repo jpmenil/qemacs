@@ -414,10 +414,6 @@ static inline int qe_isalnum(int c) {
 static inline int qe_isalnum_(int c) {
     return (qe_digit_value(c) < 36) || (c == '_');
 }
-static inline int qe_isword(int c) {
-    /* XXX: any unicode char >= 128 is considered as word. */
-    return qe_isalnum_(c) || (c >= 128);
-}
 static inline int qe_toupper(int c) {
     return (qe_inrange(c, 'a', 'z') ? c + 'A' - 'a' : c);
 }
@@ -426,6 +422,11 @@ static inline int qe_tolower(int c) {
 }
 static inline int qe_findchar(const char *str, int c) {
     return qe_inrange(c, 1, 255) && strchr(str, c) != NULL;
+}
+static inline int qe_isword(int c) {
+    /* XXX: any unicode char >= 128 is considered as word. */
+    return (qe_isalnum_(c) || (c >= 128)) &&
+        !qe_findchar("*?_[]~=&;!#$%^(){}<>", c);
 }
 static inline int qe_indexof(const char *str, int c) {
     if (qe_inrange(c, 1, 255)) {
@@ -1729,7 +1730,9 @@ struct QEmacsState {
     int emulation_flags;
     int backspace_is_control_h;
     int backup_inhibited;  /* prevent qemacs from backing up files */
+    int final_newline;  /* add new line at end of file */
     int c_label_indent;
+    int really_exit;    /* do not ask for confirmation */
     const char *user_option;
 };
 
