@@ -4413,7 +4413,7 @@ int text_display_line(EditState *s, DisplayState *ds, int offset)
                 else
                     eb_get_pos(s->b, &line, &end_char, end_offset);
 
-                for (i = start_char; i < end_char; i++) {
+                for (i = start_char; i < end_char && i < colored_nb_chars; i++) {
                     sbuf[i] = s->region_style;
                 }
             }
