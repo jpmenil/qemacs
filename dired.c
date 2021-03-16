@@ -441,7 +441,13 @@ static char *getentryslink(char *path, int size,
     char filename[MAX_FILENAME_SIZE];
     int len;
 
-    snprintf(filename, sizeof(filename), "%s/%s", dir, name);
+    errno = 0;
+    int n = snprintf(filename, sizeof(filename), "%s/%s", dir, name);
+    if (n < 0)
+    {
+        perror("snprintf failed");
+        abort();
+    }
     len = readlink(filename, path, size - 1);
     if (len < 0)
         len = 0;
