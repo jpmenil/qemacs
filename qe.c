@@ -1748,7 +1748,9 @@ static void quote_key(void *opaque, int key)
     struct QuoteKeyArgument *qa = opaque;
     EditState *s = qa->s;
 
+#pragma GCC diagnostic ignored "-Wformat-zero-length"
     put_status(s, "");  /* erase "Quote: " message */
+#pragma GCC diagnostic warning "-Wformat-zero-length"
 
     if (!s)
         return;
