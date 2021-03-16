@@ -491,7 +491,7 @@ static void do_indent_region(EditState *s)
 
 static void do_comment_region(EditState *s)
 {
-    int col_num, line1, line2, offset;
+    int col_num, line1, line2;
 
     /* deactivate region hilite */
     s->region_style = 0;
@@ -518,7 +518,7 @@ static void do_comment_region(EditState *s)
 
 static void do_uncomment_region(EditState *s)
 {
-    int col_num, line1, line2, offset;
+    int col_num, line1, line2;
 
     /* deactivate region hilite */
     s->region_style = 0;
