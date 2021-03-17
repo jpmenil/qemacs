@@ -31,8 +31,6 @@ endif
 
 ifeq ($(CC),gcc)
   CFLAGS  += -Wall -g -O2 -funsigned-char
-  # do not warn about zero-length formats.
-  CFLAGS  += -Wno-format-zero-length
   LDFLAGS += -g
 endif
 
