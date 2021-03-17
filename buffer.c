@@ -1030,7 +1030,12 @@ int eb_create_style_buffer(EditBuffer *b, int flags)
         return 0;
     } else {
         char name[MAX_BUFFERNAME_SIZE];
-        snprintf(name, sizeof(name), "*S<%s>", b->name);
+        errno = 0;
+        int n = snprintf(name, sizeof(name), "*S<%s>", b->name);
+        if (n < 0) {
+            perror("snprintf failed");
+            abort();
+        }
         b->b_styles = eb_new(name, BF_SYSTEM | BF_IS_STYLE | BF_RAW);
         b->flags |= flags & BF_STYLES;
         b->style_shift = ((unsigned)(flags & BF_STYLES) / BF_STYLE1) - 1;
@@ -1146,7 +1151,12 @@ static void eb_addlog(EditBuffer *b, enum LogOperation op,
          * should not be a problem since this log buffer is never
          * referenced by name.
          */
-        snprintf(buf, sizeof(buf), "*L<%s>", b->name);
+        errno = 0;
+        int n = snprintf(buf, sizeof(buf), "*L<%s>", b->name);
+        if (n < 0) {
+            perror("snprintf failed");
+            abort();
+        }
         b->log_buffer = eb_new(buf, BF_SYSTEM | BF_IS_LOG | BF_RAW);
         if (!b->log_buffer)
             return;

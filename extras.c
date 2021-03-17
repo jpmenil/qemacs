@@ -224,7 +224,12 @@ void do_compare_files(EditState *s, const char *filename, int bflags)
     get_default_path(s->b, s->offset, dir, sizeof(dir));
 
     if (strstart(filename, dir, &tail)) {
-        snprintf(buf, sizeof(buf), "%s../%s", dir, tail);
+        errno = 0;
+        int n = snprintf(buf, sizeof(buf), "%s../%s", dir, tail);
+        if (n < 0) {
+            perror("snprintf failed");
+            abort();
+        }
     } else
     if (pathlen == 0) {
         snprintf(buf, sizeof(buf), "../%s", filename);
@@ -1845,7 +1850,12 @@ static void do_list_tags(EditState *s) {
 
     tag_buffer(s);
 
-    snprintf(buf, sizeof buf, "Tags in file %s", s->b->filename);
+    errno = 0;
+    int n = snprintf(buf, sizeof buf, "Tags in file %s", s->b->filename);
+    if (n < 0) {
+        perror("snprintf failed");
+        abort();
+    }
     for (p = s->b->property_list; p; p = p->next) {
         if (p->type == QE_PROP_TAG) {
             //eb_printf(b, "%12d  %s\n", p->offset, (char*)p->data);
