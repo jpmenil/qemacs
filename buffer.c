@@ -2721,6 +2721,11 @@ int eb_save_buffer(EditBuffer *b)
     if (stat(filename, &st) == 0)
         st_mode = st.st_mode & 0777;
 
+    if (qs->final_newline &&
+       !eb_is_blank_line(b, b->total_size - 1, NULL))
+        /* add new line at end of file */
+        eb_write(b, b->total_size, "\n", 1);
+
     if (!qs->backup_inhibited
     &&  strlen(filename) < MAX_FILENAME_SIZE - 1) {
         /* backup old file if present */

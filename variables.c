@@ -68,6 +68,8 @@ static VarDef var_table[] = {
           "Number of columns to adjust indentation of C labels." )
     S_VAR( "really-exit", really_exit, VAR_NUMBER, VAR_RW_SAVE,
           "Do not ask for confirmation when exiting file with modified buffers.")
+    S_VAR( "final-newline", final_newline, VAR_NUMBER, VAR_RW_SAVE,
+          "Set newline at end of file.")
 
     //B_VAR( "screen-charset", charset, VAR_NUMBER, VAR_RW, NULL )
 
