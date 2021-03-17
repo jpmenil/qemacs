@@ -1730,6 +1730,7 @@ struct QEmacsState {
     int backspace_is_control_h;
     int backup_inhibited;  /* prevent qemacs from backing up files */
     int c_label_indent;
+    int really_exit;    /* do not ask for confirmation */
     const char *user_option;
 };
 
