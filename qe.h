@@ -416,7 +416,7 @@ static inline int qe_isalnum_(int c) {
 }
 static inline int qe_isword(int c) {
     /* XXX: any unicode char >= 128 is considered as word. */
-    return qe_isalnum_(c) || (c >= 128);
+    return (qe_isalnum_(c) || (c >= 128)) && (c != '_');
 }
 static inline int qe_toupper(int c) {
     return (qe_inrange(c, 'a', 'z') ? c + 'A' - 'a' : c);
