@@ -504,6 +504,37 @@ void do_show_date_and_time(EditState *s, int argval)
     put_status(s, "%.24s", ctime(&t));
 }
 
+static void do_comment_region(EditState *s, int state)
+{
+    int col_num, line1, line2;
+
+    /* deactivate region hilite */
+    s->region_style = 0;
+
+    /* Swap point and mark so mark <= point */
+    if (s->offset < s->b->mark) {
+        int tmp = s->b->mark;
+        s->b->mark = s->offset;
+        s->offset = tmp;
+    }
+    /* We do it with lines to avoid offset variations during indenting */
+    eb_get_pos(s->b, &line1, &col_num, s->b->mark);
+    eb_get_pos(s->b, &line2, &col_num, s->offset);
+
+    if (col_num == 0)
+        line2--;
+
+    /* Iterate over all lines inside block */
+    for (; line1 <= line2; line1++) {
+        s->offset = eb_goto_pos(s->b, line1, 0);
+        if (state < 0) {
+            if (eb_read_one_byte(s->b, s->offset) == '#')
+                eb_delete_uchar(s->b, s->offset);
+        } else
+            eb_insert_uchar(s->b, s->offset, '#');
+    }
+}
+
 /* forward / backward block */
 #define MAX_LEVEL     32
 
@@ -1902,6 +1933,10 @@ static CmdDef extra_commands[] = {
     CMD2( KEY_CTRLX('t'), KEY_NONE,
           "show-date-and-time", do_show_date_and_time, ESi, "ui")
 
+    CMD3( KEY_META('['), KEY_NONE,
+          "comment-region", do_comment_region, ESi, 1, "v")
+    CMD3( KEY_META(']'), KEY_NONE,
+          "uncomment-region", do_comment_region, ESi, -1, "v")
           /* Should map to KEY_META + KEY_CTRL_LEFT */
     CMD3( KEY_META(KEY_CTRL('b')), KEY_NONE,
           "backward-block", do_forward_block, ESi, -1, "v")
