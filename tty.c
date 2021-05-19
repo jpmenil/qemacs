@@ -202,7 +202,8 @@ static int tty_dpy_init(QEditScreen *s,
             ts->term_flags |= KBS_CONTROL_H;
         } else
         if (strstart(ts->term_name, "xterm", NULL)
-            || strstart(ts->term_name, "st", NULL)) {
+        || strstart(ts->term_name, "screen", NULL)
+        || strstart(ts->term_name, "st", NULL)) {
             ts->term_code = TERM_XTERM;
         } else
         if (strstart(ts->term_name, "linux", NULL)) {
@@ -219,8 +220,10 @@ static int tty_dpy_init(QEditScreen *s,
                               USE_BOLD_AS_BRIGHT_FG | USE_BLINK_AS_BRIGHT_BG;
         }
     }
-    if (strstr(ts->term_name, "true") || strstr(ts->term_name, "24")
-        || strstr(ts->term_name, "st")) {
+    if (strstr(ts->term_name, "true")
+    || strstr(ts->term_name, "24")
+    || strstr(ts->term_name, "screen")
+    || strstr(ts->term_name, "st")) {
         ts->term_flags |= USE_TRUE_COLORS | USE_256_COLORS;
     }
     if (strstr(ts->term_name, "256")) {
@@ -228,6 +231,9 @@ static int tty_dpy_init(QEditScreen *s,
     }
     if ((p = getenv("TERM_PROGRAM")) && strequal(p, "iTerm.app")) {
         /* iTerm and iTerm2 support true colors */
+        ts->term_flags |= USE_TRUE_COLORS | USE_256_COLORS;
+    }
+    if ((p = getenv("TERM_PROGRAM")) && strequal(p, "tmux")) {
         ts->term_flags |= USE_TRUE_COLORS | USE_256_COLORS;
     }
     /* actual color mode can be forced via environment variables */
