@@ -7254,7 +7254,7 @@ int qe_load_file(EditState *s, const char *filename1, int lflags, int bflags)
 {
     QEmacsState *qs = s->qe_state;
     u8 buf[4097];
-    char filename[MAX_FILENAME_SIZE];
+    char filename[MAX_FILENAME_SIZE] = {0};
     int st_mode, buf_size, mode_score;
     ModeDef *selected_mode;
     EditBuffer *b;
